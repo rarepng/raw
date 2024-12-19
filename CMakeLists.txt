@@ -1,8 +1,10 @@
-cmake_minimum_required(VERSION 3.22)
-project(raw LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.30)
+project(raw LANGUAGES C CXX)
 
 
 include(ExternalProject)
+
+
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,12 +12,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Vulkan REQUIRED)
 #find_package(Vulkan COMPONENTS glslc REQUIRED)
-list(APPEND CMAKE_PREFIX_PATH "E:/silver/qtcan/raw/cmake_more_cache/gns/lib/cmake/GameNetworkingSockets")
-list(APPEND CMAKE_PREFIX_PATH "E:/silver/qtcan/raw/cmake_more_cache/proto/lib/cmake/protobuf")
-list(APPEND CMAKE_PREFIX_PATH "E:/silver/qtcan/raw/cmake_more_cache/proto/lib/cmake/utf8_range")
-list(APPEND CMAKE_PREFIX_PATH "E:/silver/qtcan/raw/cmake_more_cache/absl/lib/cmake/absl")
-set(Protobuf_LIBRARIES "E:/silver/qtcan/raw/cmake_more_cache/proto/lib/cmake/protobuf")
-set(Protobuf_INCLUDE_DIR "E:/silver/qtcan/raw/cmake_more_cache/proto/include")
 #find_package(absl REQUIRED)
 #find_package(protobuf REQUIRED)
 #find_package(GameNetworkingSockets REQUIRED)
@@ -44,91 +40,132 @@ endif()
 
 add_definitions(-DSTEAMNETWORKINGSOCKETS_STATIC_LINK=1)
 add_definitions(-DABSL_OPTION_USE_STD_ORDERING=0)
+        
 
 
-ExternalProject_Add(abslEX
-    SOURCE_DIR ${submodules_path}/absl
-    CMAKE_ARGS
-        ${GLOBAL_DEFAULT_ARGS}
-        -G Ninja
-        -DBUILD_TESTING=OFF
-        -DCMAKE_BUILD_TYPE=Release
-        -DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/cmake_more_cache/absl
-        -DCMAKE_CXX_STANDARD=20
-        -DCMAKE_CXX_STANDARD_REQUIRED=ON
-        -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++
-        -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc
-        -DBUILD_SHARED_LIB=OFF
-        -DBUILD_SHARED_LIBS=OFF
-        -DABSL_OPTION_USE_STD_ORDERING=0
-        -DCMAKE_CXX_FLAGS='-static\ -D\ ABSL_OPTION_USE_STD_ORDERING=0\ -D\ ABSL_USES_STD_ORDERING=0'
-        -B ${PROJECT_SOURCE_DIR}/cmake_more_cache/absl_build
-    BUILD_COMMAND ninja
-    INSTALL_COMMAND ninja install
-)
-
-
-ExternalProject_Add(protoEX
-    SOURCE_DIR ${submodules_path}/protobuf
-    CMAKE_ARGS
-        ${GLOBAL_DEFAULT_ARGS}
-        -G Ninja
-        -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++
-        -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc
-        -DCMAKE_BUILD_TYPE=Release
-        -Dprotobuf_BUILD_TESTS=OFF
-        -Dprotobuf_BUILD_SHARED_LIBS=OFF
-        -DBUILD_SHARED_LIBS=OFF
-        -DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/cmake_more_cache/proto
-        -DCMAKE_CXX_STANDARD=20
-        -DCMAKE_CXX_STANDARD_REQUIRED=ON
-        -DABSL_OPTION_USE_STD_ORDERING=0
-        -DCMAKE_CXX_FLAGS='-static\ -I${PROJECT_SOURCE_DIR}/cmake_more_cache/absl/include'
-        -Dprotobuf_ABSL_PROVIDER=package
-        -DCMAKE_PREFIX_PATH=${PROJECT_SOURCE_DIR}/cmake_more_cache/absl/lib/cmake/absl
-        -DABSL_ROOT_DIR=${PROJECT_SOURCE_DIR}/cmake_more_cache/absl/lib/cmake/absl
-        -B ${PROJECT_SOURCE_DIR}/cmake_more_cache/proto_build
-    BUILD_COMMAND ninja
-    INSTALL_COMMAND ninja install
-)
+        #-DCMAKE_CXX_FLAGS='-static\ -I${PROJECT_SOURCE_DIR}/cmake_more_cache/absl/include'
+        #-Dprotobuf_ABSL_PROVIDER=package
+        #-DCMAKE_PREFIX_PATH=${PROJECT_SOURCE_DIR}/cmake_more_cache/absl/lib/cmake/absl
+        #-DABSL_ROOT_DIR=${PROJECT_SOURCE_DIR}/cmake_more_cache/absl/lib/cmake/absl
 
 
 
-ExternalProject_Add(gnsEX
-    SOURCE_DIR ${submodules_path}/gns
-    CMAKE_ARGS
-        ${GLOBAL_DEFAULT_ARGS}
-        -G Ninja
-        -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++
-        -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc
-        -DCMAKE_BUILD_TYPE=Release
-        -DProtobuf_USE_STATIC_LIBS=ON
-        -Dprotobuf_BUILD_TESTS=OFF
-        -Dprotobuf_BUILD_SHARED_LIBS=OFF
-        -DCMAKE_CXX_STANDARD=20
-        -DCMAKE_CXX_STANDARD_REQUIRED=ON
-        -DOPENSSL_USE_STATIC_LIBS=ON
-        -Dprotobuf_BUILD_TESTS=OFF
-        -Dprotobuf_BUILD_SHARED_LIBS=OFF
-        -DProtobuf_LIBRARIES=${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/lib/cmake/protobuf
-        -DProtobuf_INCLUDE_DIR=${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/include
-        -DBUILD_SHARED_LIB=OFF
-        -DBUILD_STATIC_LIB=ON
-        -DBUILD_SHARED_LIBS=OFF
-        -DBUILD_STATIC_LIBS=ON
+
+        #-DProtobuf_LIBRARIES=${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/lib/cmake/protobuf
+        #-DProtobuf_INCLUDE_DIR=${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/include
         #-DProtobuf_PROTOC_EXECUTABLE=${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/bin/protoc
-        -DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/cmake_more_cache/gns
-        -DCMAKE_PREFIX_PATH=E:/silver/qtcan/raw/cmake_more_cache/proto/bin";"E:/silver/qtcan/raw/cmake_more_cache/proto/lib/cmake/protobuf
-        #-DCMAKE_PREFIX_PATH=${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/lib/cmake/protobuf
-        -Dprotobuf_DIR=${PROJECT_SOURCE_DIR}/cmake_more_cache/proto
-        -DSTEAMNETWORKINGSOCKETS_STATIC_LINK=1
-        #-DCMAKE_CXX_FLAGS='-D\ STEAMNETWORKINGSOCKETS_STATIC_LINK=1\ --static\ -static\ -I${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/include\ -I${PROJECT_SOURCE_DIR}/cmake_more_cache/absl/include\ -L${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/lib\ -L${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/absl\ -lprotobuf\ -lprotoc\ -lutf8_range\ -labsl_synchronization\ -labsl_symbolize\ -labsl_strings\ -labsl_str_format_internal\ -labsl_strings_internal\ -labsl_log_initialize\ -labsl_log_entry\ -labsl_log_flags\ -labsl_log_severity\ -labsl_log_internal_check_op\ -labsl_log_internal_conditions\ -labsl_log_internal_message\ -labsl_log_internal_nullguard\ -labsl_log_internal_proto\ -labsl_log_internal_format\ -labsl_log_internal_globals\ -labsl_log_internal_log_sink_set\ -labsl_log_sink\ -labsl_raw_logging_internal\ -labsl_log_globals\ -labsl_cord\ -labsl_cordz_info\ -labsl_cordz_handle\ -labsl_cordz_functions\ -labsl_cord_internal\ -labsl_crc_cord_state\ -labsl_crc32c\ -labsl_crc_internal\ -labsl_exponential_biased\ -labsl_synchronization\ -labsl_time\ -labsl_time_zone\ -labsl_int128\ -labsl_examine_stack\ -labsl_stacktrace\ -labsl_symbolize\ -labsl_demangle_internal\ -labsl_debugging_internal\ -labsl_malloc_internal\ -labsl_throw_delegate\ -labsl_strerror\ -labsl_raw_hash_set\ -labsl_hash\ -labsl_city\ -labsl_low_level_hash\ -labsl_base\ -labsl_spinlock_wait\ -labsl_status\ -std=c++20\ -lstdc++'
-        -DCMAKE_CXX_FLAGS='--static\ -static\ -I${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/include\ -I${PROJECT_SOURCE_DIR}/cmake_more_cache/absl/include\ -L${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/lib\ -L${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/absl\ -lprotobuf\ -lprotoc\ -lutf8_range\ -std=c++20\ -lstdc++'
-        -B "${PROJECT_SOURCE_DIR}/cmake_more_cache/gns_build"
-    BUILD_COMMAND ninja
-    INSTALL_COMMAND ninja install
-    DEPENDS protoEX
+        #-Dprotobuf_DIR=${PROJECT_SOURCE_DIR}/cmake_more_cache/proto
+
+
+
+        #-DCMAKE_CXX_FLAGS='--static\ -static\ -I${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/include\ -I${PROJECT_SOURCE_DIR}/cmake_more_cache/absl/include\ -L${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/lib\ -L${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/absl\ -lprotobuf\ -lprotoc\ -lutf8_range'
+
+
+set(BUILD_TESTING OFF CACHE BOOL "set" FORCE)
+set(CMAKE_BUILD_TYPE Release CACHE STRING "set" FORCE)
+
+set(BUILD_SHARED_LIB OFF CACHE BOOL "set" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "set" FORCE)
+set(BUILD_STATIC_LIBS ON CACHE BOOL "set" FORCE)
+set(BUILD_STATIC_LIB ON CACHE BOOL "set" FORCE)
+
+set(protobuf_BUILD_TESTS OFF CACHE BOOL "set" FORCE)
+set(protobuf_BUILD_SHARED_LIBS OFF CACHE BOOL "set" FORCE)
+set(Protobuf_USE_STATIC_LIBS ON CACHE BOOL "set" FORCE)
+set(OPENSSL_USE_STATIC_LIBS ON CACHE BOOL "set" FORCE)
+set(ABSL_ENABLE_INSTALL ON CACHE BOOL "set" FORCE)
+
+set(ABSL_OPTION_USE_STD_ORDERING 0 CACHE BOOL "set" FORCE)
+set(ABSL_PROPAGATE_CXX_STD ON CACHE BOOL "set" FORCE)
+
+set(STEAMNETWORKINGSOCKETS_STATIC_LINK 1 CACHE BOOL "set" FORCE)
+
+
+set(CMAKE_CXX_COMPILER g++ CACHE STRING "set" FORCE)
+set(CMAKE_C_COMPILER gcc CACHE STRING "set" FORCE)
+
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "set" FORCE)
+set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE BOOL "set" FORCE)
+
+set(CMAKE_BUILD_TYPE Release CACHE STRING "set" FORCE)
+
+set(CMAKE_CXX_FLAGS='--static\ -static\ -D\ ABSL_OPTION_USE_STD_ORDERING=0\ -D\ ABSL_USES_STD_ORDERING=0\ -D\ STEAMNETWORKINGSOCKETS_STATIC_LINK=1')
+
+
+
+set (CMAKE_GENERATOR "Ninja" CACHE INTERNAL "" FORCE)
+
+set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/cmake_more_cache/installs" CACHE PATH "installs" FORCE) #USELESSS!!!!!!!!!!!
+
+
+add_subdirectory(${submodules_path}/absl ${PROJECT_SOURCE_DIR}/cmake_more_cache/absl)#ABSL_OPTION_USE_STD_ORDERING=0
+
+
+
+
+
+
+
+
+
+
+
+
+add_subdirectory(${submodules_path}/protobuf ${PROJECT_SOURCE_DIR}/cmake_more_cache/proto)#protobuf_ABSL_PROVIDER=package ABSL_ROOT_DIR=${submodules_path}/absl
+
+
+
+
+
+##target_link_libraries(libprotobuf PRIVATE absl::absl_check)
+##target_link_libraries(libprotobuf-lite PRIVATE absl_check)
+##target_link_libraries(libprotoc PRIVATE absl_check)
+#install(TARGETS libprotobuf DESTINATION ${PROJECT_SOURCE_DIR}/protobuf)
+
+#add_custom_target(build_proto
+#    COMMAND ${CMAKE_COMMAND} --build ${PROJECT_SOURCE_DIR}/cmake_more_cache/proto
+#    DEPENDS libprotobuf
+#)
+#
+add_custom_target(install_proto
+    COMMAND ${CMAKE_COMMAND} -P instproto.cmake
+    DEPENDS libprotobuf
 )
+add_custom_target(link_gns
+    COMMAND ${CMAKE_COMMAND} -P addgns.cmake
+    DEPENDS install_proto
+)
+
+#install(TARGETS libprotobuf protoc libprotobuf-lite libprotoc libupb)
+
+
+
+set(Protobuf_LIBRARIES "${PROJECT_SOURCE_DIR}/cmake_more_cache/installs/lib" CACHE PATH "set" FORCE)
+set(Protobuf_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/cmake_more_cache/installs/include" CACHE PATH "set" FORCE)
+set(Protobuf_PROTOC_EXECUTABLE "${PROJECT_SOURCE_DIR}/cmake_more_cache/installs/bin/protoc" CACHE FILEPATH "set" FORCE)
+
+
+#list(APPEND CMAKE_PREFIX_PATH  "${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/cmake/protobuf" FORCE)
+list(APPEND CMAKE_PREFIX_PATH  "${PROJECT_SOURCE_DIR}/cmake_more_cache/installs/bin" FORCE)
+#add_custom_command(
+#    TARGET protoc
+#    POST_BUILD
+#    COMMAND ${CMAKE_COMMAND} --install ${PROJECT_SOURCE_DIR}/cmake_more_cache/proto 
+#    COMMAND ${CMAKE_COMMAND} -P addgns.cmake
+#    VERBATIM
+#    POST_INSTALL_SCRIPT
+#    #WORKING_DIRECTORY 
+#)
+
+
+
+
+#set(Protobuf_DIR ${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/cmake/protobuf)
+#add_subdirectory(${submodules_path}/gns ${PROJECT_SOURCE_DIR}/cmake_more_cache/gns)
+
+
+
+
 
 
 #target_compile_definitions(gnsEX PUBLIC STEAMNETWORKINGSOCKETS_STATIC_LINK)
@@ -140,6 +177,21 @@ add_subdirectory(${submodules_path}/glm)
 add_subdirectory(${submodules_path}/vk_boot)
 add_subdirectory(${submodules_path}/vma)
 
+
+
+set(Protobuf_LIBRARIES ${PROJECT_SOURCE_DIR}/cmake_more_cache/protobuf/lib/cmake/protobuf CACHE STRING "set" FORCE)
+set(Protobuf_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/cmake_more_cache/protobuf/include CACHE STRING "set" FORCE)
+set(Protobuf_PROTOC_EXECUTABLE ${PROJECT_SOURCE_DIR}/cmake_more_cache/protobuf/protoc CACHE STRING "set" FORCE)
+#set(protobuf_DIR ${PROJECT_SOURCE_DIR}/cmake_more_cache/protobuf CACHE STRING "set" FORCE)
+#set(Protobuf_ROOT ${PROJECT_SOURCE_DIR}/cmake_more_cache/protobuf CACHE STRING "set" FORCE)
+
+
+
+
+#add_subdirectory(${submodules_path}/gns ${PROJECT_SOURCE_DIR}/cmake_more_cache/gns)#STEAMNETWORKINGSOCKETS_STATIC_LINK=1
+
+
+#add_dependencies(GameNetworkingSockets_s protoEX)
 
 file(GLOB PROJECT_SOURCES "src/*.cpp" "src/*/*.cpp")
 set(OTHER_SOURCES
@@ -196,19 +248,21 @@ add_custom_command(
 add_custom_target(resources_bin_deps DEPENDS ${PROJECT_BINARY_DIR}/resources)
 add_dependencies(raw resources_bin_deps)
 
-target_link_directories(raw PRIVATE
-${PROJECT_SOURCE_DIR}/cmake_more_cache/gns/lib
-${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/lib
+add_dependencies(raw link_gns)
 
-)
+#target_link_directories(raw PRIVATE
+#${PROJECT_SOURCE_DIR}/cmake_more_cache/gns/lib
+#${PROJECT_SOURCE_DIR}/cmake_more_cache/proto/lib
+#
+#)
+
+target_include_directories(raw PUBLIC ${PROJECT_SOURCE_DIR}/sub/gns/include)
 
 
-
-add_dependencies(protoEX abslEX)
-add_dependencies(gnsEX protoEX)
-add_dependencies(raw gnsEX)
 
 #add_library(absl::strings ALIAS absl_strings)
+
+#include(addgns.cmake)
 
 target_link_libraries(raw
     PRIVATE
@@ -217,10 +271,10 @@ target_link_libraries(raw
         glm
         Vulkan::Vulkan
         vk-bootstrap::vk-bootstrap
-        protobuf
+        GameNetworkingSockets_s
+        #protobuf
         #absl::any
         #GameNetworkingSockets
-        GameNetworkingSockets_s
         #${PROJECT_SOURCE_DIR}/cmake_more_cache/gns/lib/cmake/GameNetworkingSockets
         #utf8_range
         #OpenSSL::SSL
