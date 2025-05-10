@@ -80,6 +80,7 @@ The binary is only linked to the libraries statically for the time being (minima
 	- export OPENSSL_USE_STATIC_LIBS=ON
 	- ./Configure --prefix=$PWD/dist no-idea no-mdc2 no-rc5 no-shared mingw64
 	- make depend && make && make install
+	- if you get error when building docs for openssl, use 'make install_w' instead of 'make install' as it is usually broken on windows
 - set OPENSSL_ROOT_DIR environment variable to /path/to/openssl/dist or wherever u set the install prefix for openssl to
 - configure cmake from project source e.g: 
 	- cmake -G Ninja -S . -B build -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
